@@ -18,11 +18,6 @@ O projeto Pschool é um sistema de gerenciamento de alunos e pais feito em blazo
 - **Blazor**: Framework para construção de interfaces ricas e interativas no lado do cliente.
 - **SQL Server**: Banco de dados utilizado para persistência de dados.
 
-## Estrutura do Projeto
-
-- **`Pschool`**: Contém a lógica da aplicação e a interface do usuário.
-- **`PschoolCrud`**: Contém os serviços e entidades do sistema, bem como as configurações do banco de dados.
-
 ## Padrões de Projeto
 
 - **Relacionamento entre Alunos e Pais**: Implementado com comportamento de exclusão em cascata para garantir a integridade dos dados.
