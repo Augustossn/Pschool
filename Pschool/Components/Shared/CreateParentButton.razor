@@ -1,0 +1,11 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<button @onclick="CreateParent" class="btn btn-primary">Create Parent</button>
+
+@code {
+	void CreateParent()
+	{
+		NavigationManager.NavigateTo("/edit-parent");
+	}
+}

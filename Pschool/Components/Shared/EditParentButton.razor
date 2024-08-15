@@ -1,0 +1,14 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<button @onclick="EditParent" class="btn btn-primary">Edit Parent</button>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+
+	void EditParent()
+	{
+		NavigationManager.NavigateTo($"/edit-parent/{Id}");
+	}
+}

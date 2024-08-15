@@ -1,0 +1,78 @@
+﻿@page "/edit-student/{Id:int?}"
+@inject IStudentService StudentService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveAuto
+
+@if (Id == null)
+{
+    <h3>Create Student</h3>
+}
+else
+{
+    <h3>Edit @student.StudentName</h3>
+    <p>Parent: @(student.Parent != null ? student.Parent.Name : "None")</p>
+}
+
+<EditForm Model="student" OnValidSubmit="HandleSubmit">
+    <div class="form-group">
+        <label for="studentName">Name</label>
+        <InputText id="studentName" @bind-Value="student.StudentName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="parentId">Parent</label>
+        <InputSelect id="parentId" @bind-Value="student.ParentId" class="form-control">
+            <option value="">Select Parent</option>
+            @foreach (var parent in parents)
+            {
+                <option value="@parent.Id">@parent.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    @if (Id != null)
+    {
+        <button @onclick="DeleteStudent" type="button" class="btn btn-danger">Delete</button>
+    }
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private Student student = new Student();
+    private List<Parent> parents = new List<Parent>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Inicializar a lista de pais
+        parents = await StudentService.GetAllParents();
+
+        if (Id.HasValue)
+        {
+            student = await StudentService.GetById(Id.Value);
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await StudentService.Post(student);
+        }
+        else
+        {
+            await StudentService.Put(student, (int)Id);
+        }
+
+        NavigationManager.NavigateTo("/students");
+    }
+
+    private async Task DeleteStudent()
+    {
+        if (Id.HasValue)
+        {
+            await StudentService.Delete(Id.Value);
+            NavigationManager.NavigateTo("/students");
+        }
+    }
+}

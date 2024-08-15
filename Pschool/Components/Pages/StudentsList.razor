@@ -1,0 +1,49 @@
+﻿@page "/students"
+@inject IStudentService StudentService
+@attribute [StreamRendering(true)]
+@rendermode InteractiveServer
+
+<h3>Students List</h3>
+
+@if (students == null)
+{
+    <span>Loading...</span>
+}
+else if (students.Count == 0)
+{
+    <span>No students found.</span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Parent</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <td>@student.StudentName</td>
+                    <td>@(student.Parent != null ? student.Parent.Name : "None")</td>
+                    <td>
+                        <EditStudentButton Id="student.StudentId" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<CreateStudentButton />
+
+@code {
+    List<Student> students = new List<Student>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await StudentService.GetAll();
+    }
+}

@@ -1,0 +1,12 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<button @onclick="CreateStudent" class="btn btn-primary">Create Student</button>
+
+@code {
+	void CreateStudent()
+	{
+		NavigationManager.NavigateTo("/edit-student");
+	}
+}
+

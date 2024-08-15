@@ -1,0 +1,68 @@
+﻿@page "/edit-parent"
+@page "/edit-parent/{Id:int?}"
+@inject IParentService ParentService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveAuto
+
+@if (Id == null)
+{
+    <h3>Create Parent</h3>
+}
+else
+{
+    <h3>Edit @parent.Name</h3>
+}
+
+<EditForm Model="parent" OnValidSubmit="HandleSubmit">
+    <div class="form-group">
+        <label for="parentName">Name</label>
+        <InputText id="parentName" @bind-Value="parent.Name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    @if (Id != null)
+    {
+        <button @onclick="DeleteParent" type="button" class="btn btn-danger">Delete</button>
+    }
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private Parent parent = new Parent { Name = string.Empty };
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id.HasValue)
+        {
+            parent = await ParentService.GetById(Id.Value);
+        }
+        else
+        {
+            parent = new Parent { Name = string.Empty };
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await ParentService.Post(parent);
+        }
+        else
+        {
+            await ParentService.Put(parent, (int)Id);
+        }
+
+        NavigationManager.NavigateTo("/parents");
+    }
+
+    private async Task DeleteParent()
+    {
+        if (Id.HasValue)
+        {
+            await ParentService.Delete((int)Id);
+            NavigationManager.NavigateTo("/parents");
+        }
+    }
+}
